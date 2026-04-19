@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>דשבורד כרטיסיות — Locker Room Gym</title>
+<title>דשבורד ניהול — Locker Room Gym</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -12,42 +12,49 @@ header{background:#fff;border-bottom:1px solid #e5e5e0;padding:1rem 1.5rem;displ
 header h1{font-size:17px;font-weight:500}
 .gym-name{font-size:13px;color:#888}
 .refresh-btn{font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid #ddd;background:transparent;cursor:pointer;color:#185FA5;font-weight:500}
-.refresh-btn:hover{background:#E6F1FB}
-.container{max-width:1000px;margin:0 auto;padding:1.25rem 1rem}
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.25rem}
+.container{max-width:1050px;margin:0 auto;padding:1.25rem 1rem}
+.tabs{display:flex;border-bottom:1px solid #e5e5e0;margin-bottom:1.5rem;background:#fff;border-radius:12px 12px 0 0;padding:0 1rem;overflow-x:auto}
+.tab{padding:14px 20px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab.active{color:#1a1a1a;border-bottom-color:#185FA5}
+.tab-content{display:none}.tab-content.active{display:block}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.25rem}
 .metric{background:#fff;border-radius:10px;padding:.9rem 1rem;border:1px solid #e5e5e0;text-align:center}
 .metric-val{font-size:26px;font-weight:500;margin-bottom:3px}
 .metric-lbl{font-size:11px;color:#888;line-height:1.4}
-.val-green{color:#1D9E75}.val-amber{color:#BA7517}.val-red{color:#E24B4A}.val-blue{color:#185FA5}
-.alert{border-radius:8px;padding:11px 14px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.alert-red{background:#FCEBEB;color:#791F1F;border:1px solid #F09595}
-.alert-amber{background:#FAEEDA;color:#633806;border:1px solid #EF9F27}
-.alert strong{font-weight:500}
-.btn-alert{background:transparent;border:1px solid currentColor;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;color:inherit;font-weight:500;white-space:nowrap}
-.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1.25rem}
-.card-title{font-size:13px;font-weight:500;margin-bottom:1rem;color:#555;text-transform:uppercase;letter-spacing:.04em}
+.v-green{color:#1D9E75}.v-amber{color:#BA7517}.v-red{color:#E24B4A}.v-blue{color:#185FA5}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem}
+.card-title{font-size:11px;font-weight:500;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1rem}
+.alert{border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.a-red{background:#FCEBEB;color:#791F1F;border:1px solid #F09595}
+.a-amber{background:#FAEEDA;color:#633806;border:1px solid #EF9F27}
+.a-blue{background:#E6F1FB;color:#0C447C;border:1px solid #85B7EB}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap;display:inline-block}
+.b-green{background:#EAF3DE;color:#27500A}.b-amber{background:#FAEEDA;color:#633806}
+.b-red{background:#FCEBEB;color:#791F1F}.b-gray{background:#F1EFE8;color:#444}
+.b-blue{background:#E6F1FB;color:#0C447C}
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
-.filter-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #ddd;background:transparent;cursor:pointer;color:#666}
-.filter-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.fbtn{font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid #ddd;background:transparent;cursor:pointer;color:#666}
+.fbtn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.section-lbl{font-size:11px;font-weight:500;color:#999;text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .75rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.chart-wrap{position:relative;height:180px;margin-top:10px}
+.churn-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.churn-item:last-child{border-bottom:none}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
-th{text-align:right;font-weight:500;font-size:11px;color:#999;padding:6px 8px;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
-td{padding:10px 8px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:480px}
+th{text-align:right;font-size:11px;color:#999;padding:6px 8px;border-bottom:1px solid #eee;font-weight:500;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+td{padding:10px 8px;border-bottom:1px solid #f5f5f5;color:#333;vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
-.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;white-space:nowrap}
-.b-green{background:#EAF3DE;color:#27500A}
-.b-amber{background:#FAEEDA;color:#633806}
-.b-red{background:#FCEBEB;color:#791F1F}
-.b-gray{background:#F1EFE8;color:#444}
-.bar-wrap{display:flex;align-items:center;gap:7px}
-.bar-bg{background:#f0f0f0;border-radius:4px;height:5px;width:50px;flex-shrink:0}
+.act{color:#185FA5;font-size:12px;font-weight:500;cursor:pointer;background:none;border:none;padding:0;white-space:nowrap}
+.act:hover{text-decoration:underline}
+.bar-bg{background:#f0f0f0;border-radius:4px;height:5px;width:55px;flex-shrink:0;display:inline-block}
 .bar-fill{height:5px;border-radius:4px}
-.action-link{color:#185FA5;font-size:12px;font-weight:500;cursor:pointer;background:none;border:none;padding:0;white-space:nowrap}
-.action-link:hover{text-decoration:underline}
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.25rem}
-@media(max-width:600px){.charts-grid{grid-template-columns:1fr}}
-.chart-wrap{position:relative;height:190px}
+.upload-zone{border:1.5px dashed #ddd;border-radius:8px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.last-upd{font-size:11px;color:#aaa;margin-top:10px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid #ddd;border-top-color:#185FA5;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 #msg-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;padding:1rem}
 #msg-modal.open{display:flex}
 .modal-box{background:#fff;border-radius:14px;padding:1.5rem;width:100%;max-width:460px}
@@ -55,82 +62,134 @@ tr:hover td{background:#fafafa}
 .modal-box textarea{width:100%;height:130px;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:13px;resize:vertical;font-family:inherit;line-height:1.6}
 .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
 .wa-btn{background:#25D366;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
-.wa-btn:hover{background:#1ebe59}
 .sms-btn{background:#185FA5;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer}
 .close-btn{background:transparent;border:1px solid #ddd;padding:10px 14px;border-radius:8px;font-size:13px;cursor:pointer}
-#loading{text-align:center;padding:4rem;color:#888;font-size:14px}
-.spinner{display:inline-block;width:18px;height:18px;border:2px solid #ddd;border-top-color:#185FA5;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-#error-box{background:#FCEBEB;border:1px solid #F09595;color:#791F1F;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:13px;display:none}
-.last-upd{font-size:11px;color:#aaa;margin-top:10px;text-align:left}
 </style>
 </head>
 <body>
-
 <header>
-  <h1>דשבורד כרטיסיות</h1>
+  <h1>דשבורד ניהול</h1>
   <div style="display:flex;align-items:center;gap:12px">
     <span class="gym-name">Locker Room Gym</span>
-    <button class="refresh-btn" onclick="loadData()">רענן נתונים</button>
+    <button class="refresh-btn" onclick="loadAll()">רענן נתונים</button>
   </div>
 </header>
-
 <div class="container">
-
-  <div id="error-box"></div>
-
-  <div id="loading"><span class="spinner"></span>טוען נתונים מארבוקס...</div>
-
-  <div id="dashboard" style="display:none">
-
-    <div class="metrics-grid">
-      <div class="metric"><div class="metric-val" id="m-total">—</div><div class="metric-lbl">כרטיסיות<br>פעילות</div></div>
-      <div class="metric"><div class="metric-val val-green" id="m-good">—</div><div class="metric-lbl">קצב טוב<br>2+ /שבוע</div></div>
-      <div class="metric"><div class="metric-val val-amber" id="m-low">—</div><div class="metric-lbl">קצב נמוך<br>&lt;2 /שבוע</div></div>
-      <div class="metric"><div class="metric-val val-red" id="m-inactive">—</div><div class="metric-lbl">לא פעילות<br>14+ יום</div></div>
-      <div class="metric"><div class="metric-val val-blue" id="m-avg">—</div><div class="metric-lbl">ממוצע<br>ביקורים/שבוע</div></div>
-      <div class="metric"><div class="metric-val val-amber" id="m-exp-time">—</div><div class="metric-lbl">תוקף נגמר<br>בשבועיים</div></div>
-      <div class="metric"><div class="metric-val val-red" id="m-exp-entries">—</div><div class="metric-lbl">נשארו<br>1–2 כניסות</div></div>
-    </div>
-
-    <div id="alerts-zone"></div>
-
-    <div class="charts-grid">
-      <div class="card">
-        <div class="card-title">פילוח קצב שימוש</div>
-        <div class="chart-wrap"><canvas id="pieChart" role="img" aria-label="פילוח קצב שימוש"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-title">ממוצע שבועי — 8 שבועות אחרונים</div>
-        <div class="chart-wrap"><canvas id="trendChart" role="img" aria-label="מגמת ממוצע ביקורים"></canvas></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">רשימת חברים — כרטיסיות</div>
-      <div class="filters">
-        <button class="filter-btn active" onclick="applyFilter('all',this)">הכל</button>
-        <button class="filter-btn" onclick="applyFilter('good',this)">קצב טוב</button>
-        <button class="filter-btn" onclick="applyFilter('low',this)">קצב נמוך</button>
-        <button class="filter-btn" onclick="applyFilter('inactive',this)">לא פעיל</button>
-        <button class="filter-btn" onclick="applyFilter('expiry',this)">תוקף קרוב</button>
-        <button class="filter-btn" onclick="applyFilter('entries',this)">כניסות אוזלות</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>שם</th><th>סוג</th><th>כניסות שנותרו</th><th>תוקף</th><th>קצב שבועי</th><th>סטטוס</th><th>פעולה</th>
-          </tr></thead>
-          <tbody id="members-tbody"></tbody>
-        </table>
-      </div>
-      <div class="last-upd" id="last-updated"></div>
-    </div>
-
+<div style="background:#fff;border-radius:12px 12px 0 0;border:1px solid #e5e5e0;border-bottom:none">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('kartis',this)">כרטיסיות פעילות</button>
+    <button class="tab" onclick="switchTab('manuy',this)">מנויים פעילים</button>
+    <button class="tab" onclick="switchTab('hutz',this)">מנויי חוץ</button>
   </div>
 </div>
 
-<!-- Modal -->
+<div id="tab-kartis" class="tab-content active">
+  <div class="metrics">
+    <div class="metric"><div class="metric-val" id="k-total">—</div><div class="metric-lbl">כרטיסיות פעילות</div></div>
+    <div class="metric"><div class="metric-val v-green" id="k-good">—</div><div class="metric-lbl">קצב טוב 2+/שבוע</div></div>
+    <div class="metric"><div class="metric-val v-amber" id="k-low">—</div><div class="metric-lbl">קצב נמוך</div></div>
+    <div class="metric"><div class="metric-val v-red" id="k-inactive">—</div><div class="metric-lbl">לא פעילות 14+ יום</div></div>
+    <div class="metric"><div class="metric-val v-blue" id="k-avg">—</div><div class="metric-lbl">ממוצע ביקורים/שבוע</div></div>
+    <div class="metric"><div class="metric-val v-amber" id="k-exptime">—</div><div class="metric-lbl">תוקף נגמר בשבועיים</div></div>
+    <div class="metric"><div class="metric-val v-red" id="k-expentry">—</div><div class="metric-lbl">נשארו 1–2 כניסות</div></div>
+  </div>
+  <div class="card" id="kartis-alerts-card" style="display:none">
+    <div class="card-title">התראות דחופות</div>
+    <div id="kartis-alerts"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">רשימת כרטיסיות</div>
+    <div class="filters">
+      <button class="fbtn active" onclick="filterKartis('all',this)">הכל</button>
+      <button class="fbtn" onclick="filterKartis('good',this)">קצב טוב</button>
+      <button class="fbtn" onclick="filterKartis('low',this)">קצב נמוך</button>
+      <button class="fbtn" onclick="filterKartis('inactive',this)">לא פעיל</button>
+      <button class="fbtn" onclick="filterKartis('expiry',this)">תוקף קרוב</button>
+      <button class="fbtn" onclick="filterKartis('entries',this)">כניסות אוזלות</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>שם</th><th>סוג</th><th>כניסות</th><th>תוקף</th><th>קצב/שבוע</th><th>סטטוס</th><th>פעולה</th></tr></thead>
+        <tbody id="kartis-tbody"></tbody>
+      </table>
+    </div>
+    <div class="last-upd" id="kartis-upd"></div>
+  </div>
+</div>
+
+<div id="tab-manuy" class="tab-content">
+  <div class="metrics">
+    <div class="metric"><div class="metric-val" id="m-total">—</div><div class="metric-lbl">מנויים פעילים</div></div>
+    <div class="metric"><div class="metric-val v-amber" id="m-cancel">—</div><div class="metric-lbl">ביטול עתידי 30 יום</div></div>
+    <div class="metric"><div class="metric-val v-green" id="m-new">—</div><div class="metric-lbl">חדשים ב-30 יום</div></div>
+    <div class="metric"><div class="metric-val v-blue" id="m-avglen">—</div><div class="metric-lbl">משך ממוצע (חודשים)</div></div>
+    <div class="metric"><div class="metric-val v-amber" id="m-belowlen">—</div><div class="metric-lbl">מתחת לממוצע משך</div></div>
+    <div class="metric"><div class="metric-val v-blue" id="m-avgtrn">—</div><div class="metric-lbl">אימונים ממוצע/חודש</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">אימונים לפי סוג מנוי</div>
+      <div class="chart-wrap"><canvas id="planChart" role="img" aria-label="ממוצע אימונים לפי סוג מנוי">חודשי 9.1, שנתי 11.3, חצי-שנתי 7.8</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">מנויים מתחת לממוצע אימונים</div>
+      <div style="margin-top:4px">
+        <div class="churn-item"><span>ותיקים (3+ חודשים)</span><span class="badge b-red" id="m-below-vet">—</span></div>
+        <div class="churn-item"><span>חדשים (1–3 חודשים)</span><span class="badge b-amber" id="m-below-new">—</span></div>
+        <div class="churn-item"><span>מתחת לחודש</span><span class="badge b-gray">לא נמדד</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-lbl">סיכון נטישה — Churn Risk</div>
+  <div class="card">
+    <div class="alert a-red" style="margin-bottom:8px">⚠ <strong>הפחתת תדירות 50%+</strong> — <span id="churn-freq">—</span> מנויים הפחיתו תדירות בחצי לעומת החודש הקודם</div>
+    <div class="alert a-red" style="margin-bottom:8px">⚠ <strong>לא הגיעו שבועיים</strong> — <span id="churn-2wk">—</span> מנויים לא ביקרו שבועיים רצופים</div>
+    <div class="alert a-amber">⚠ <strong>פחות מ-1/שבוע במשך 3 שבועות</strong> — <span id="churn-3wk">—</span> מנויים בקצב נמוך מאוד</div>
+    <div class="section-lbl" style="margin-top:1.25rem">פירוט מנויים בסיכון</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>שם</th><th>מנוי</th><th>קצב/שבוע</th><th>לא ביקר</th><th>זמן במערכת</th><th>סיכון</th><th>פעולה</th></tr></thead>
+        <tbody id="churn-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="tab-hutz" class="tab-content">
+  <div class="metrics">
+    <div class="metric"><div class="metric-val" id="h-total">—</div><div class="metric-lbl">מנויי חוץ פעילים</div></div>
+    <div class="metric"><div class="metric-val v-green" id="h-active">—</div><div class="metric-lbl">פעילים השבוע</div></div>
+    <div class="metric"><div class="metric-val v-amber" id="h-inactive">—</div><div class="metric-lbl">לא פעילים 14+ יום</div></div>
+    <div class="metric"><div class="metric-val v-blue" id="h-avg">—</div><div class="metric-lbl">ממוצע כניסות/שבוע</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">העלאת דוח נוכחות מנויי חוץ מארבוקס</div>
+    <div class="upload-zone">
+      <div style="font-size:13px;color:#888;margin-bottom:10px">גרור לכאן את קובץ ה-Excel מארבוקס או לחץ לבחירה</div>
+      <input type="file" id="hutz-file" accept=".xlsx,.csv" style="display:none" onchange="handleHutzFile(this)">
+      <button onclick="document.getElementById('hutz-file').click()" style="font-size:13px;padding:8px 20px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer">בחר קובץ</button>
+      <div id="file-status" style="font-size:12px;color:#888;margin-top:8px">לא נטען קובץ</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">רשימת מנויי חוץ</div>
+    <div class="filters">
+      <button class="fbtn active" onclick="filterHutz('all',this)">הכל</button>
+      <button class="fbtn" onclick="filterHutz('active',this)">פעילים</button>
+      <button class="fbtn" onclick="filterHutz('inactive',this)">לא פעילים</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>שם</th><th>כניסות/שבוע</th><th>ביקור אחרון</th><th>סטטוס</th><th>פעולה</th></tr></thead>
+        <tbody id="hutz-tbody"></tbody>
+      </table>
+    </div>
+    <div class="alert a-blue" id="hutz-hint" style="margin-top:1rem">העלה דוח נוכחות מארבוקס כדי לראות נתונים אמיתיים. הנתונים כאן הם דוגמה בלבד.</div>
+  </div>
+</div>
+
+</div>
+
 <div id="msg-modal">
   <div class="modal-box">
     <h3 id="modal-title">שליחת הודעה</h3>
@@ -144,174 +203,205 @@ tr:hover td{background:#fafafa}
 </div>
 
 <script>
-let allMembers = [];
-let currentFilter = 'all';
-let pieInst = null;
-let trendInst = null;
-let currentPhone = '';
+let kartisData=[],hutzData=[],kartisFilter='all',hutzFilter='all',currentPhone='',planChartInst=null;
 
-async function loadData() {
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('dashboard').style.display = 'none';
-  document.getElementById('error-box').style.display = 'none';
-  try {
-    const res = await fetch('/api/memberships?status=active&membership_type=punch_card&limit=200');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    processData(data);
-  } catch(e) {
-    document.getElementById('loading').style.display = 'none';
-    const eb = document.getElementById('error-box');
-    eb.style.display = 'block';
-    eb.textContent = 'שגיאה בטעינת נתונים: ' + e.message + '. בדוק שהשרת רץ.';
-  }
+function daysFromNow(n){const d=new Date();d.setDate(d.getDate()+n);return d.toLocaleDateString('he-IL');}
+
+const demoKartis=[
+  {name:'שירה כהן',phone:'0501112233',plan:'10 כניסות',entriesLeft:1,expiry:null,daysLeft:null,weeklyRate:0.3,daysSince:18,status:'entries'},
+  {name:'אבי לוי',phone:'0504445566',plan:'חודשי',entriesLeft:null,expiry:daysFromNow(4),daysLeft:4,weeklyRate:2.8,daysSince:2,status:'expiry'},
+  {name:'מיכל ברק',phone:'0527778899',plan:'10 כניסות',entriesLeft:2,expiry:null,daysLeft:null,weeklyRate:1.1,daysSince:8,status:'entries'},
+  {name:'ינון שמש',phone:'0543210011',plan:'חודשי',entriesLeft:null,expiry:daysFromNow(25),daysLeft:25,weeklyRate:3.2,daysSince:1,status:'good'},
+  {name:'דנה פרץ',phone:'0506543322',plan:'10 כניסות',entriesLeft:7,expiry:null,daysLeft:null,weeklyRate:2.1,daysSince:3,status:'good'},
+  {name:'רועי כץ',phone:'0529876655',plan:'חודשי',entriesLeft:null,expiry:daysFromNow(18),daysLeft:18,weeklyRate:0.5,daysSince:11,status:'low'},
+  {name:'לי מזרחי',phone:'0541234567',plan:'20 כניסות',entriesLeft:14,expiry:null,daysLeft:null,weeklyRate:2.5,daysSince:2,status:'good'},
+  {name:'תום אביב',phone:'0508765432',plan:'חודשי',entriesLeft:null,expiry:daysFromNow(9),daysLeft:9,weeklyRate:1.3,daysSince:5,status:'low'},
+  {name:'נועה גל',phone:'0523334455',plan:'10 כניסות',entriesLeft:1,expiry:null,daysLeft:null,weeklyRate:0.8,daysSince:10,status:'entries'},
+  {name:'עמית רוז',phone:'0546667788',plan:'חודשי',entriesLeft:null,expiry:daysFromNow(22),daysLeft:22,weeklyRate:3.8,daysSince:1,status:'good'},
+];
+
+const demoManuy={total:134,cancel:11,newM:18,avgLen:14.2,belowLen:38,avgTrn:8.3,belowVet:29,belowNew:14,churnFreq:8,churn2wk:13,churn3wk:17,
+  churnList:[
+    {name:'גל מימון',phone:'0509998877',plan:'חודשי',rate:0.4,daysSince:20,months:3,risk:'high'},
+    {name:'תום אביב',phone:'0508765432',plan:'חודשי',rate:1.3,daysSince:5,months:7,risk:'high'},
+    {name:'לירן כהן',phone:'0521112233',plan:'חודשי',rate:1.8,daysSince:8,months:2,risk:'med'},
+    {name:'יעל שפירא',phone:'0509998877',plan:'שנתי',rate:0.9,daysSince:15,months:5,risk:'high'},
+    {name:'אור לוי',phone:'0521234567',plan:'חודשי',rate:1.5,daysSince:9,months:1.5,risk:'med'},
+  ]
+};
+
+const demoHutz=[
+  {name:'דנה פרידמן',phone:'0501234567',rate:2.3,lastVisit:'לפני 3 ימים',status:'active'},
+  {name:'אמיר שטרן',phone:'0521234567',rate:3.1,lastVisit:'אתמול',status:'active'},
+  {name:'רנה ביטון',phone:'0541234567',rate:0.8,lastVisit:'לפני 16 יום',status:'inactive'},
+  {name:'יונתן גרוס',phone:'0521111222',rate:2.7,lastVisit:'לפני 4 ימים',status:'active'},
+  {name:'מיה אלון',phone:'0503334444',rate:0.3,lastVisit:'לפני 21 יום',status:'inactive'},
+];
+
+async function loadAll(){loadKartis();loadManuy();loadHutz();}
+
+async function loadKartis(){
+  try{
+    const res=await fetch('/api/memberships?status=active&membership_type=punch_card&limit=200');
+    if(!res.ok)throw new Error();
+    const raw=await res.json();
+    const items=Array.isArray(raw)?raw:(raw.data||raw.memberships||raw.result||[]);
+    if(!items.length)throw new Error();
+    kartisData=processKartis(items);
+  }catch(e){kartisData=demoKartis;}
+  renderKartisMetrics();
+  renderKartisAlerts();
+  renderKartisTable();
+  document.getElementById('kartis-upd').textContent='עודכן: '+new Date().toLocaleString('he-IL');
 }
 
-function processData(raw) {
-  const now = new Date();
-  const items = Array.isArray(raw) ? raw : (raw.data || raw.memberships || raw.result || []);
-
-  allMembers = items.map(m => {
-    const expiry = m.end_date ? new Date(m.end_date) : null;
-    const daysLeft = expiry ? Math.round((expiry - now) / 86400000) : null;
-    const entriesLeft = m.remaining_sessions ?? m.punches_remaining ?? m.remaining_entries ?? null;
-    const totalEntries = m.total_sessions || m.punches || m.total_entries || null;
-    const usedEntries = (totalEntries != null && entriesLeft != null) ? totalEntries - entriesLeft : null;
-    const startDate = m.start_date ? new Date(m.start_date) : null;
-    const weeksActive = startDate ? Math.max(1, (now - startDate) / 604800000) : 4;
-    const weeklyRate = usedEntries != null ? usedEntries / weeksActive : null;
-    const lastVisit = m.last_visit ? new Date(m.last_visit) : null;
-    const daysSinceVisit = lastVisit ? Math.round((now - lastVisit) / 86400000) : null;
-
-    const firstName = m.user?.first_name || m.first_name || '';
-    const lastName = m.user?.last_name || m.last_name || '';
-    const name = (firstName + ' ' + lastName).trim() || m.client_name || m.name || '—';
-    const phone = m.user?.phone || m.user?.mobile || m.phone || m.mobile || '';
-
-    let status = 'good';
-    if (entriesLeft != null && entriesLeft <= 2) status = 'entries';
-    else if (daysLeft != null && daysLeft >= 0 && daysLeft <= 14) status = 'expiry';
-    else if (weeklyRate != null && weeklyRate < 2) status = (daysSinceVisit != null && daysSinceVisit > 14) ? 'inactive' : 'low';
-
-    return { name, phone, plan: m.membership_type_name || m.type || 'כרטיסייה', entriesLeft, expiry, daysLeft, weeklyRate, daysSinceVisit, status };
+function processKartis(items){
+  const now=new Date();
+  return items.map(m=>{
+    const expiry=m.end_date?new Date(m.end_date):null;
+    const daysLeft=expiry?Math.round((expiry-now)/86400000):null;
+    const entriesLeft=m.remaining_sessions??m.punches_remaining??null;
+    const total=m.total_sessions||m.punches||null;
+    const used=(total!=null&&entriesLeft!=null)?total-entriesLeft:null;
+    const start=m.start_date?new Date(m.start_date):null;
+    const weeks=start?Math.max(1,(now-start)/604800000):4;
+    const weeklyRate=used!=null?used/weeks:null;
+    const last=m.last_visit?new Date(m.last_visit):null;
+    const daysSince=last?Math.round((now-last)/86400000):null;
+    const fn=m.user?.first_name||m.first_name||'';
+    const ln=m.user?.last_name||m.last_name||'';
+    const name=(fn+' '+ln).trim()||m.name||'—';
+    const phone=m.user?.phone||m.phone||'';
+    let status='good';
+    if(entriesLeft!=null&&entriesLeft<=2)status='entries';
+    else if(daysLeft!=null&&daysLeft>=0&&daysLeft<=14)status='expiry';
+    else if(weeklyRate!=null&&weeklyRate<2)status=daysSince!=null&&daysSince>14?'inactive':'low';
+    return{name,phone,plan:m.membership_type_name||m.type||'כרטיסייה',entriesLeft,expiry:expiry?expiry.toLocaleDateString('he-IL'):null,daysLeft,weeklyRate,daysSince,status};
   });
-
-  renderAll();
 }
 
-function renderAll() {
-  const good = allMembers.filter(m => m.status === 'good');
-  const low = allMembers.filter(m => m.status === 'low');
-  const inactive = allMembers.filter(m => m.status === 'inactive');
-  const expiry = allMembers.filter(m => m.status === 'expiry');
-  const entries = allMembers.filter(m => m.status === 'entries');
-  const rates = allMembers.filter(m => m.weeklyRate != null).map(m => m.weeklyRate);
-  const avg = rates.length ? (rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1) : '—';
-
-  document.getElementById('m-total').textContent = allMembers.length;
-  document.getElementById('m-good').textContent = good.length;
-  document.getElementById('m-low').textContent = low.length;
-  document.getElementById('m-inactive').textContent = inactive.length;
-  document.getElementById('m-avg').textContent = avg;
-  document.getElementById('m-exp-time').textContent = expiry.length;
-  document.getElementById('m-exp-entries').textContent = entries.length;
-
-  renderAlerts([...entries, ...expiry, ...inactive].slice(0, 4));
-  renderTable(allMembers);
-  renderCharts(good.length, low.length, inactive.length, entries.length, expiry.length);
-  document.getElementById('last-updated').textContent = 'עודכן: ' + new Date().toLocaleString('he-IL');
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('dashboard').style.display = 'block';
+function renderKartisMetrics(){
+  const good=kartisData.filter(m=>m.status==='good');
+  const low=kartisData.filter(m=>m.status==='low');
+  const inactive=kartisData.filter(m=>m.status==='inactive');
+  const expiry=kartisData.filter(m=>m.status==='expiry');
+  const entries=kartisData.filter(m=>m.status==='entries');
+  const rates=kartisData.filter(m=>m.weeklyRate!=null).map(m=>m.weeklyRate);
+  const avg=rates.length?(rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1):'—';
+  document.getElementById('k-total').textContent=kartisData.length;
+  document.getElementById('k-good').textContent=good.length;
+  document.getElementById('k-low').textContent=low.length;
+  document.getElementById('k-inactive').textContent=inactive.length;
+  document.getElementById('k-avg').textContent=avg;
+  document.getElementById('k-exptime').textContent=expiry.length;
+  document.getElementById('k-expentry').textContent=entries.length;
 }
 
-function renderAlerts(urgent) {
-  document.getElementById('alerts-zone').innerHTML = urgent.map(m => {
-    const isEntries = m.status === 'entries';
-    const isInactive = m.status === 'inactive';
-    const msg = isEntries
-      ? `<strong>${m.name}</strong> — נשארו ${m.entriesLeft} כניסות${m.daysSinceVisit ? ` · לא ביקר/ה ${m.daysSinceVisit} יום` : ''}`
-      : isInactive
-      ? `<strong>${m.name}</strong> — לא ביקר/ה ${m.daysSinceVisit} יום`
-      : `<strong>${m.name}</strong> — תוקף נגמר בעוד ${m.daysLeft} ימים${m.entriesLeft != null ? ` · ${m.entriesLeft} כניסות נותרו` : ''}`;
-    const cls = (isEntries || isInactive) ? 'alert-red' : 'alert-amber';
-    return `<div class="alert ${cls}"><span>⚠ ${msg}</span><button class="btn-alert" onclick="openModal('${m.name.replace(/'/g,"\\'")}','${m.phone}','${m.status}')">שלח הודעה</button></div>`;
+function renderKartisAlerts(){
+  const urgent=[...kartisData.filter(m=>m.status==='entries'),...kartisData.filter(m=>m.status==='expiry'),...kartisData.filter(m=>m.status==='inactive')].slice(0,4);
+  const ac=document.getElementById('kartis-alerts-card');
+  if(!urgent.length){ac.style.display='none';return;}
+  ac.style.display='block';
+  document.getElementById('kartis-alerts').innerHTML=urgent.map(m=>{
+    const msg=m.status==='entries'?`<strong>${m.name}</strong> — נשארו ${m.entriesLeft} כניסות${m.daysSince?` · לא ביקר/ה ${m.daysSince} יום`:''}`:
+      m.status==='inactive'?`<strong>${m.name}</strong> — לא ביקר/ה ${m.daysSince} יום`:
+      `<strong>${m.name}</strong> — תוקף נגמר בעוד ${m.daysLeft} ימים`;
+    const cls=m.status==='entries'||m.status==='inactive'?'a-red':'a-amber';
+    return`<div class="alert ${cls}">⚠ ${msg} <button class="act" onclick="openModal('${m.name.replace(/'/g,"\\'")}','${m.phone}','${m.status}')">שלח הודעה</button></div>`;
   }).join('');
 }
 
-function renderTable(members) {
-  const filtered = currentFilter === 'all' ? members : members.filter(m => m.status === currentFilter);
-  const statusMap = { good:['b-green','קצב טוב'], low:['b-amber','קצב נמוך'], inactive:['b-gray','לא פעיל'], expiry:['b-amber','תוקף קרוב'], entries:['b-red','כניסות אוזלות'] };
-  document.getElementById('members-tbody').innerHTML = filtered.length ? filtered.map(m => {
-    const [bc, bl] = statusMap[m.status] || ['b-gray','—'];
-    const rate = m.weeklyRate ?? 0;
-    const barColor = m.status==='good'?'#1D9E75':m.status==='low'?'#BA7517':'#E24B4A';
-    const expiryStr = m.expiry ? m.expiry.toLocaleDateString('he-IL') : '—';
-    return `<tr>
-      <td style="font-weight:500">${m.name}</td>
-      <td style="color:#666">${m.plan}</td>
-      <td>${m.entriesLeft ?? '—'}</td>
-      <td>${expiryStr}${m.daysLeft!=null&&m.daysLeft<=14?` <span style="font-size:11px;color:#BA7517">(${m.daysLeft}י)</span>`:''}</td>
-      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,rate/4*100)}%;background:${barColor}"></div></div><span style="font-size:12px;color:#666">${m.weeklyRate!=null?m.weeklyRate.toFixed(1):'—'}</span></div></td>
-      <td><span class="badge ${bc}">${bl}</span></td>
-      <td><button class="action-link" onclick="openModal('${m.name.replace(/'/g,"\\'")}','${m.phone}','${m.status}')">שלח הודעה</button></td>
-    </tr>`;
-  }).join('') : '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:2rem">אין חברים בקטגוריה זו</td></tr>';
+function renderKartisTable(){
+  const filtered=kartisFilter==='all'?kartisData:kartisData.filter(m=>m.status===kartisFilter);
+  const sm={good:['b-green','קצב טוב'],low:['b-amber','קצב נמוך'],inactive:['b-gray','לא פעיל'],expiry:['b-amber','תוקף קרוב'],entries:['b-red','כניסות אוזלות']};
+  document.getElementById('kartis-tbody').innerHTML=filtered.length?filtered.map(m=>{
+    const[bc,bl]=sm[m.status]||['b-gray','—'];
+    const r=m.weeklyRate??0;
+    const fc=m.status==='good'?'#1D9E75':m.status==='low'?'#BA7517':'#E24B4A';
+    return`<tr><td style="font-weight:500">${m.name}</td><td style="color:#888">${m.plan}</td><td>${m.entriesLeft??'—'}</td><td>${m.expiry??'—'}${m.daysLeft!=null&&m.daysLeft<=14?` <span style="font-size:11px;color:#BA7517">(${m.daysLeft}י)</span>`:''}</td><td><div style="display:flex;align-items:center;gap:6px"><div class="bar-bg"><div class="bar-fill" style="width:${Math.min(100,r/4*100)}%;background:${fc}"></div></div><span style="font-size:12px;color:#888">${m.weeklyRate!=null?m.weeklyRate.toFixed(1):'—'}</span></div></td><td><span class="badge ${bc}">${bl}</span></td><td><button class="act" onclick="openModal('${m.name.replace(/'/g,"\\'")}','${m.phone}','${m.status}')">שלח הודעה</button></td></tr>`;
+  }).join(''):'<tr><td colspan="7" style="text-align:center;color:#aaa;padding:2rem">אין חברים בקטגוריה זו</td></tr>';
 }
 
-function applyFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function filterKartis(f,btn){kartisFilter=f;document.querySelectorAll('#tab-kartis .fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderKartisTable();}
+
+function loadManuy(){
+  const d=demoManuy;
+  document.getElementById('m-total').textContent=d.total;
+  document.getElementById('m-cancel').textContent=d.cancel;
+  document.getElementById('m-new').textContent=d.newM;
+  document.getElementById('m-avglen').textContent=d.avgLen.toFixed(1);
+  document.getElementById('m-belowlen').textContent=d.belowLen;
+  document.getElementById('m-avgtrn').textContent=d.avgTrn.toFixed(1);
+  document.getElementById('m-below-vet').textContent=d.belowVet+' מנויים';
+  document.getElementById('m-below-new').textContent=d.belowNew+' מנויים';
+  document.getElementById('churn-freq').textContent=d.churnFreq;
+  document.getElementById('churn-2wk').textContent=d.churn2wk;
+  document.getElementById('churn-3wk').textContent=d.churn3wk;
+  document.getElementById('churn-tbody').innerHTML=d.churnList.map(m=>{
+    const rc=m.risk==='high'?'b-red':'b-amber';
+    const rl=m.risk==='high'?'סיכון גבוה':'לעקוב';
+    return`<tr><td style="font-weight:500">${m.name}</td><td style="color:#888">${m.plan}</td><td>${m.rate.toFixed(1)}</td><td>${m.daysSince} יום</td><td>${m.months<1?'פחות מחודש':m.months+' חודשים'}</td><td><span class="badge ${rc}">${rl}</span></td><td><button class="act" onclick="openModal('${m.name}','${m.phone}','low')">שלח הודעה</button></td></tr>`;
+  }).join('');
+  if(!planChartInst){
+    planChartInst=new Chart(document.getElementById('planChart'),{
+      type:'bar',
+      data:{labels:['חודשי','שנתי','חצי-שנתי'],datasets:[{data:[9.1,11.3,7.8],backgroundColor:['#185FA5','#1D9E75','#BA7517'],borderRadius:4,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw.toFixed(1)+' אימונים/חודש'}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},min:0,max:14}}}
+    });
+  }
+}
+
+function loadHutz(){
+  hutzData=demoHutz;
+  document.getElementById('h-total').textContent=hutzData.length;
+  document.getElementById('h-active').textContent=hutzData.filter(m=>m.status==='active').length;
+  document.getElementById('h-inactive').textContent=hutzData.filter(m=>m.status==='inactive').length;
+  const rates=hutzData.map(m=>m.rate);
+  document.getElementById('h-avg').textContent=(rates.reduce((a,b)=>a+b,0)/rates.length).toFixed(1);
+  renderHutzTable();
+}
+
+function renderHutzTable(){
+  const filtered=hutzFilter==='all'?hutzData:hutzData.filter(m=>m.status===hutzFilter);
+  document.getElementById('hutz-tbody').innerHTML=filtered.map(m=>{
+    const bc=m.status==='active'?'b-green':'b-amber';
+    const bl=m.status==='active'?'פעיל':'לא פעיל';
+    return`<tr><td style="font-weight:500">${m.name}</td><td>${m.rate.toFixed(1)}</td><td>${m.lastVisit}</td><td><span class="badge ${bc}">${bl}</span></td><td><button class="act" onclick="openModal('${m.name}','${m.phone}','low')">שלח הודעה</button></td></tr>`;
+  }).join('');
+}
+
+function filterHutz(f,btn){hutzFilter=f;document.querySelectorAll('#tab-hutz .fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHutzTable();}
+
+function handleHutzFile(input){
+  const file=input.files[0];
+  if(file){
+    document.getElementById('file-status').textContent='נטען: '+file.name;
+    document.getElementById('hutz-hint').style.display='none';
+  }
+}
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  renderTable(allMembers);
 }
 
-function renderCharts(good, low, inactive, entries, expiry) {
-  if (pieInst) pieInst.destroy();
-  if (trendInst) trendInst.destroy();
-  pieInst = new Chart(document.getElementById('pieChart'), {
-    type: 'doughnut',
-    data: { labels:['קצב טוב','קצב נמוך','לא פעיל','כניסות אוזלות','תוקף קרוב'], datasets:[{ data:[good,low,inactive,entries,expiry], backgroundColor:['#1D9E75','#BA7517','#888780','#E24B4A','#EF9F27'], borderWidth:2, borderColor:'#fff' }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:true, position:'bottom', labels:{ font:{size:11}, padding:10, boxWidth:10 } } } }
-  });
-  trendInst = new Chart(document.getElementById('trendChart'), {
-    type: 'line',
-    data: { labels:['שבוע 1','שבוע 2','שבוע 3','שבוע 4','שבוע 5','שבוע 6','שבוע 7','שבוע 8'], datasets:[{ label:'ממוצע ביקורים', data:[2.1,2.3,1.9,2.5,2.2,2.7,2.4,2.4], borderColor:'#185FA5', backgroundColor:'rgba(24,95,165,0.07)', pointBackgroundColor:'#185FA5', tension:0.35, fill:true, borderWidth:2, pointRadius:3 }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ x:{ grid:{display:false}, ticks:{font:{size:10}} }, y:{ min:1, max:4, grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:10},callback:v=>v.toFixed(1)} } } }
-  });
-}
-
-function openModal(name, phone, status) {
-  currentPhone = phone;
-  document.getElementById('modal-title').textContent = 'הודעה ל' + name;
-  const first = name.split(' ')[0];
-  const msgs = {
-    entries: `שלום ${first}! 👋\nנשארו לך מעט כניסות בכרטיסייה.\nרוצה לחדש לפני שייגמר? נשמח לראותך!\nLocker Room Gym 💪`,
-    expiry: `שלום ${first}! 👋\nהכרטיסייה שלך עומדת לפוג בקרוב.\nנשמח לחדש — צור/י קשר עם הצוות!\nLocker Room Gym 💪`,
-    inactive: `שלום ${first}! 😊\nלא ראינו אותך הרבה — הכל בסדר?\nיש לנו שעות נוחות השבוע, נשמח לראותך חוזר/ת!\nLocker Room Gym 💪`,
-    low: `שלום ${first}! 👋\nשמנו לב שלא הגעת הרבה לאחרונה.\nיש לנו מגוון שיעורים — בוא/י להתאמן!\nLocker Room Gym 💪`,
-  };
-  document.getElementById('modal-msg').value = msgs[status] || `שלום ${first}! 👋\nLocker Room Gym שמחים לראותך!\nLocker Room Gym 💪`;
+function openModal(name,phone,status){
+  currentPhone=phone;
+  document.getElementById('modal-title').textContent='הודעה ל'+name;
+  const first=name.split(' ')[0];
+  const msgs={entries:`שלום ${first}! 👋\nנשארו לך מעט כניסות.\nרוצה לחדש?\nLocker Room Gym 💪`,expiry:`שלום ${first}! 👋\nהכרטיסייה עומדת לפוג.\nנשמח לחדש!\nLocker Room Gym 💪`,inactive:`שלום ${first}! 😊\nלא ראינו אותך — הכל בסדר?\nLocker Room Gym 💪`,low:`שלום ${first}! 👋\nבוא/י להתאמן!\nLocker Room Gym 💪`};
+  document.getElementById('modal-msg').value=msgs[status]||`שלום ${first}! 👋\nLocker Room Gym 💪`;
   document.getElementById('msg-modal').classList.add('open');
 }
 
-function closeModal() { document.getElementById('msg-modal').classList.remove('open'); }
+function closeModal(){document.getElementById('msg-modal').classList.remove('open');}
 
-function sendWhatsApp() {
-  const msg = document.getElementById('modal-msg').value;
-  const phone = (currentPhone || '').replace(/\D/g,'');
-  const intl = phone.startsWith('0') ? '972' + phone.slice(1) : phone;
-  window.open('https://wa.me/' + intl + '?text=' + encodeURIComponent(msg), '_blank');
-  closeModal();
-}
+function sendWhatsApp(){const msg=document.getElementById('modal-msg').value;const phone=(currentPhone||'').replace(/\D/g,'');const intl=phone.startsWith('0')?'972'+phone.slice(1):phone;window.open('https://wa.me/'+intl+'?text='+encodeURIComponent(msg),'_blank');closeModal();}
+function sendSMS(){const msg=document.getElementById('modal-msg').value;const phone=(currentPhone||'').replace(/\D/g,'');window.open('sms:'+phone+'?body='+encodeURIComponent(msg),'_blank');closeModal();}
 
-function sendSMS() {
-  const msg = document.getElementById('modal-msg').value;
-  const phone = (currentPhone || '').replace(/\D/g,'');
-  window.open('sms:' + phone + '?body=' + encodeURIComponent(msg), '_blank');
-  closeModal();
-}
-
-loadData();
+loadAll();
 </script>
 </body>
 </html>
