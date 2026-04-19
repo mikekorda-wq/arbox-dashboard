@@ -23,5 +23,6 @@ app.get('/api/*', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.get('/debug', (req, res) => res.json({ key: ARBOX_KEY ? ARBOX_KEY.substring(0,5) + '...' : 'EMPTY' }));
 
 app.listen(PORT, () => console.log('Server running on port ' + PORT));
