@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ARBOX_KEY = process.env.ARBOX_KEY || '';
+const ARBOX_KEY = process.env.ARBOX_KEY || 'hFRSXRZb-L0aF-5QzU-ByG6-RQoYZxgfXJDl';
 const ARBOX_BASE = 'https://api.arboxapp.com/index.php/api/v2';
 
 app.use(express.static(path.join(__dirname, 'public')));
