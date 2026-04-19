@@ -12,10 +12,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/*', async (req, res) => {
   const endpoint = req.path.replace('/api', '');
   const query = new URLSearchParams(req.query).toString();
-  const url = `${ARBOX_BASE}${endpoint}${query ? '?' + query : ''}`;
+const url = `${ARBOX_BASE}${endpoint}?authtoken=${ARBOX_KEY}${query ? '&' + query : ''}`;
   try {
     const response = await fetch(url, {
-      headers: { 'authtoken': ARBOX_KEY, 'Content-Type': 'application/json' }
+headers: { 'Content-Type': 'application/json' }
     });
     const data = await response.json();
     res.json(data);
