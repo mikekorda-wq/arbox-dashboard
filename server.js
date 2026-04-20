@@ -8,6 +8,7 @@ const ARBOX_EMAIL = process.env.ARBOX_EMAIL || '';
 const ARBOX_PASSWORD = process.env.ARBOX_PASSWORD || '';
 const BOX_ID = process.env.BOX_ID || '17857';
 const ARBOX_BASE = 'https://api.arboxapp.com/index.php/api/v1';
+const ARBOX_LOGIN_URL = 'https://arboxserver.arboxapp.com/api/v2/login';
 
 let accessToken = null;
 let tokenExpiry = 0;
@@ -18,19 +19,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 async function getAccessToken() {
   if (accessToken && Date.now() < tokenExpiry) return accessToken;
   try {
-    const res = await fetch(`${ARBOX_BASE}/login`, {
+    const res = await fetch(ARBOX_LOGIN_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ email: ARBOX_EMAIL, password: ARBOX_PASSWORD })
     });
     const data = await res.json();
-    console.log('Login response:', JSON.stringify(data).substring(0, 200));
-    const token = data.data?.token || data.token || data.accessToken || data.access_token;
+    console.log('Login response:', JSON.stringify(data).substring(0, 300));
+    const token = data.data?.token || data.data?.accessToken || data.token || data.accessToken;
     if (token) {
       accessToken = token;
       tokenExpiry = Date.now() + 3600000;
-      console.log('Got token:', token.substring(0, 20) + '...');
+      console.log('Got token successfully!');
       return accessToken;
+    } else {
+      console.log('No token in response:', JSON.stringify(data).substring(0, 200));
     }
   } catch(e) {
     console.log('Login error:', e.message);
@@ -67,6 +70,7 @@ app.get('/debug', async (req, res) => {
     boxId: BOX_ID,
     hasToken: !!token,
     tokenPreview: token ? token.substring(0, 20) + '...' : 'none',
+    loginUrl: ARBOX_LOGIN_URL,
     base: ARBOX_BASE
   });
 });
